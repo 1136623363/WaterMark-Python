@@ -41,8 +41,10 @@ async def auth_login(json:login_Item):
 
 @app.get("/api/records/total")
 async def records_total(request: Request):
-    print(request.headers.get("Authorization"))
-    print('aaa')
+    authorization = request.headers.get("Authorization")
+    print(authorization)
+
+    print(JWT_helper.validate_token(authorization))
     total_num = SQL_helper.fetchall('select total_num from USER_INFO')
     json = {
         "total_num": total_num,

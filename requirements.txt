@@ -1,0 +1,7 @@
+DBUtils==1.2
+fastapi
+pydantic
+pymysql
+pyjwt
+yt-dlp
+requests

@@ -1,0 +1,9 @@
+data: {
+link: t.textareaAValue,
+source: t.$source,
+timestamp: l,
+signature: t.encrypt(t.textareaAValue + "######" + l + "######" + getApp().globalData.token + "######" + t.$source),
+version: 1
+}
+
+

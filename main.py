@@ -1,3 +1,5 @@
+from datetime import datetime
+
 from fastapi import FastAPI,Request
 from pydantic import BaseModel
 from utils import *
@@ -31,7 +33,13 @@ async def auth_login(json:login_Item):
     UserInfo = login(json.code,json.data,json.iv)
     print(UserInfo)
     openId = UserInfo["openId"]
-
+    result = SQL_helper.fetchall('SELECT * FROM USER_INFO WHERE openId = %s',(openId,))
+    if len(result) != 0 :
+        join_date = datetime.now().date()
+        total_num = 0
+        last_use_time = datetime.now()
+        result = SQL_helper.execute('INSERT INTO USER_INFO (openId, join_date, total_num, last_use_time) VALUES (%s, %s, %s, %s)',
+                         openId, join_date, total_num, last_use_time)
     data = {
         'token': JWT_helper.creat_token(openId),
     }
@@ -42,11 +50,14 @@ async def auth_login(json:login_Item):
 @app.get("/api/records/total")
 async def records_total(request: Request):
     authorization = request.headers.get("Authorization")
-    print(authorization)
+    # print(authorization)
 
-    print(JWT_helper.validate_token(authorization))
-    total_num = SQL_helper.fetchall('select total_num from USER_INFO')
+    openId = JWT_helper.validate_token(authorization)
+
+    total_num = SQL_helper.fetchall('SELECT total_num FROM USER_INFO WHERE openId = %s',(openId,))
+
     json = {
         "total_num": total_num,
     }
+
     return json

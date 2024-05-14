@@ -1,4 +1,6 @@
 import time
+from datetime import datetime
+
 import pymysql
 import threading
 from DBUtils.PooledDB import PooledDB, SharedDBConnection
@@ -37,14 +39,35 @@ def fetchone(sql,*args):
 
     conn = POOL.connection()
     cursor = conn.cursor()
+
     cursor.execute(sql,args)
     result = cursor.fetchone()
     cursor.close()
     conn.close()
     return result
 
+def execute(sql,*args):
+
+    conn = POOL.connection()
+    cursor = conn.cursor()
+    print(args)
+    cursor.execute(sql,args)
+    conn.commit()
+    cursor.close()
+    conn.close()
+    return True
+
 
 # from threading import Thread
 # for i in range(1000):
 #     t = Thread(target=func,args=(i,))
 #     t.start()
+# openId = '176'
+# join_date = datetime.now().date()
+# total_num = 0
+# last_use_time = datetime.now()
+# result = execute('INSERT INTO USER_INFO (openId, join_date, total_num, last_use_time) VALUES (%s, %s, %s, %s)',
+#                  openId, join_date, total_num, last_use_time)
+# print(result)
+# if len(result)!=0:
+#     print(result)

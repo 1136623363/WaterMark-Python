@@ -17,13 +17,13 @@ def validate_token(token, secret_key="1136623363"):
     try:
         # 解码 JWT
         payload = jwt.decode(token, secret_key, algorithms=["HS256"])
-        print(payload)
+        # print(payload)
         # 转换 exp 字段为 datetime 对象
         exp = datetime.fromtimestamp(payload["exp"])
 
         # 验证签名和有效期
         if exp >= datetime.utcnow():
-            return True
+            return payload["openId"]
     except jwt.ExpiredSignatureError:
         # token 已过期
         return False
@@ -46,3 +46,5 @@ def validate_token(token, secret_key="1136623363"):
 #     print("Token is valid.")
 # else:
 #     print("Token is invalid.")
+
+# print(validate_token('eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJvcGVuSWQiOiJvYlBWRTVOMThGSFZ3T05IUllhRHZrczhFU3h3IiwiZXhwIjoxNzE1NjY3MDE0fQ.ws2bfEnvSljOMdEPoI9Xuax-Nlb3sG3xhLRMmJ7m9Q8'))
